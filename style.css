@@ -133,3 +133,7 @@ body {
   background-color: #fff;
   color: #000;
 }
+
+.none {
+  display: none;
+}
