@@ -1,73 +1,119 @@
 'use strict'
 
-const formWrapper = document.querySelector('.js-form-wrapper')
-const homePage = document.querySelector('.js-home-page')
-const formButton = document.querySelector('.js-form-btn')
-const homePageButton = document.querySelector('.js-form-btn')
-const characterUserName = document.querySelector('.character__user-name')
-const menuCharacterButton = document.querySelector('#characterid')
-const menuHomePageButton = document.querySelector('#homepageid')
-const character = document.querySelector('.character')
-const menu = document.querySelector('.menu')
-
-formButton.addEventListener('click', () => {
-  const userName = document.querySelector('.js-form-input').value
-  formWrapper.classList.toggle('none')
-  homePage.classList.toggle('none')
-  menu.classList.toggle('none')
-  characterUserName.textContent = userName
-})
-
-menuCharacterButton.addEventListener('click', () => {
-  character.classList.remove('none')
-  homePage.classList.add('none')
-})
-
-menuHomePageButton.addEventListener('click', () => {
-  character.classList.add('none')
-  homePage.classList.remove('none')
-})
-
-const popup = document.querySelector('.popup');
-const popupBtn = document.querySelector('.popup__btn');
-
-const togglePopup = (popup) => {
-  if (popup.classList.contains('hidden')) {
-    popup.classList.remove('hidden');
-  }
-};
-
-const handleButton = (event) => {
-  const element = event.target;
-
-  togglePopup(popup);
+// DOM Elements
+const elements = {
+  // section elements
+  homePage: document.querySelector('.js-home-page'),
+  character: document.querySelector('.character'),
+  settings: document.querySelector('.settings'),
+  menu: document.querySelector('.menu'),
+  // form elements
+  formWrapper: document.querySelector('.js-form-wrapper'),
+  formButton: document.querySelector('.js-form-btn'),
+  // home page elements
+  homePageButton: document.querySelector('.js-form-btn'),
+  // username elements
+  characterUserName: document.querySelector('.character__username'),
+  settingsUserName: document.querySelector('.settings__username'),
+  // menu elements
+  menuCharacterButton: document.querySelector('#characterid'),
+  menuHomePageButton: document.querySelector('#homepageid'),
+  menuSettingsButton: document.querySelector('#settingsid'),
+  // popup elements
+  popup: document.querySelector('.popup'),
+  popupBtn: document.querySelector('.popup__btn'),
+  changeImageButton: document.querySelector('.character__change-img-btn'),
+  popupItems: document.querySelectorAll('.popup__list-item'),
+  characterAvatar: document.querySelector('.character__avatar img'),
 }
 
-const popupClose = () => {
-  popup.classList.add('hidden');
-};
+function initFunctions() {
+  initForm()
+  addMenuButtonHandler()
+  initPopup()
+  switchTheme()
+}
 
-popupBtn.addEventListener('click', popupClose);
-popup.addEventListener('click', (event) => {
-  if (event.target.classList.contains('popup')) {
-    popup.classList.add('hidden');
-  }
-});
+// Submit registration form
+function initForm() {
+  elements.formButton.addEventListener('click', handleFormSubmit)
+}
 
-const changeImageButton = document.querySelector('.character__change-img-btn')
+function handleFormSubmit() {
+  const userName = document.querySelector('.js-form-input').value || 'Guest'
+  elements.formWrapper.classList.add('none')
+  elements.homePage.classList.remove('none')
+  elements.menu.classList.remove('none')
+  elements.characterUserName.textContent = userName
+  elements.settingsUserName.textContent`Username: ${userName}`
+}
 
-changeImageButton.addEventListener('click', () => {
-  popup.classList.toggle('hidden')
+// Section change menu button handler
+function addMenuButtonHandler() {
+  elements.menuCharacterButton.addEventListener('click', () => showSection('character'))
+  elements.menuHomePageButton.addEventListener('click', () => showSection('homePage'))
+  elements.menuSettingsButton.addEventListener('click', () => showSection('settings'))
+}
 
-})
+// Add character button handler
+function showSection(sectionName) {
+  elements.settings.classList.add('none')
+  elements.homePage.classList.add('none')
+  elements.character.classList.add('none')
 
-const popupItems = document.querySelectorAll('.popup__list-item')
+  elements[sectionName].classList.remove('none')
+}
 
-popupItems.forEach((item, index) => {
-  item.addEventListener('click', () => {
-    document.querySelector('.character__avatar img').src =
-      `assets/img/characters/${index + 1}.jpg`
+// Popup function
+function initPopup() {
+  elements.changeImageButton.addEventListener('click', togglePopup)
+  elements.popupBtn.addEventListener('click', closePopup)
+  elements.popup.addEventListener('click', handlePopupClick)
 
-    popup.classList.toggle('hidden')
+  elements.popupItems.forEach((item, index) => {
+    item.addEventListener('click', () => changeAvatar(index))
   })
-})
+}
+
+function togglePopup() {
+  elements.popup.classList.toggle('hidden')
+}
+
+function closePopup() {
+  elements.popup.classList.add('hidden')
+}
+
+function handlePopupClick(event) {
+  if (event.target === elements.popup) {
+    closePopup()
+  }
+}
+
+function changeAvatar(index) {
+  elements.characterAvatar.src = `assets/img/characters/${index + 1}.jpg`
+  closePopup()
+}
+
+function switchTheme() {
+  const btnChangeTheme =
+    document.querySelector('.settings__btn-change-theme')
+  const isDarkThemeCached = localStorage.getItem('theme') === 'dark'
+
+  if (isDarkThemeCached) {
+    document.documentElement.classList.add('is-dark-theme')
+  }
+
+  btnChangeTheme.addEventListener('click', handleThemeSwitcher)
+}
+
+function handleThemeSwitcher() {
+  const isDarkTheme = document.documentElement.classList.contains('is-dark-theme')
+  document.documentElement.classList.toggle('is-dark-theme')
+
+  localStorage.setItem(
+    'theme',
+    isDarkTheme ? 'light' : 'dark'
+  )
+}
+
+initFunctions()

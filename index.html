@@ -31,7 +31,7 @@
     <form action="" class="form">
       <legend class="form__title">Create Your Character</legend>
       <label class="form__label">Character Name
-        <input type="text" class="form__input js-form-input">
+        <input type="text" class="form__input js-form-input" autofocus>
       </label>
       <button type="button" class="form__btn btn js-form-btn">Create Character</button>
     </form>
@@ -46,7 +46,7 @@
       <button class="character__change-img-btn btn">Change avatar</button>
     </div>
     <div class="character__info">
-      <div class="character__user-name">-</div>
+      <div class="character__username">-</div>
       <div class="character__battle-history">
         <div class="character__victories">Wins: <span>0</span></div>
         <div class="character__defeats">Loses: <span>0</span></div>
@@ -68,6 +68,14 @@
         </ul>
       </div>
     </div>
+  </section>
+
+  <section class="settings none">
+    <div class="settings__username-block">
+      <p class="settings__username">Username: </p>
+      <button class="settings__btn-change-username btn">Edit</button>
+    </div>
+    <button class="settings__btn-change-theme btn" data-js-theme-switcher>Change Theme</button>
   </section>
   <script src="script.js"></script>
 </body>
